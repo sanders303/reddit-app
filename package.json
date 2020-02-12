@@ -1,0 +1,12 @@
+{
+  "name": "reddit-app",
+  "private": true,
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^3.10.3"
+  }
+}
