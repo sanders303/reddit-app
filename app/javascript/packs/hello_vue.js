@@ -40,7 +40,6 @@
 //     el: '#hello',
 //     data: {
 //       message: "Can you say hello?"
-//     },
 //     components: { App }
 //   })
 // })
@@ -60,13 +59,26 @@ import App from '../app.vue'
 Vue.use(TurbolinksAdapter)
 
 document.addEventListener('turbolinks:load', () => {
-  const app = new Vue({
-    el: '#hello',
-    data: () => {
-      return {
-        message: "Can you say hello?"
+  const postListElement = document.getElementById('post-list');
+  console.log(postListElement)
+  if (postListElement !== null) {
+    const postList = new Vue({
+      el: postListElement,
+      data: () => {
+        return {
+          posts: []
+        }
+      },
+      mounted() {
+        fetch(postListElement.dataset.url)
+          .then(response => response.text())
+          .then((text) => {
+            console.log(text);
+            this.posts = JSON.parse(text);
+          })
       }
-    },
-    components: { App }
-  })
+    })
+  }
+
+
 })
