@@ -12,8 +12,10 @@
     <li class="nav-item">
       <%= link_to 'Logout',  destroy_user_session_url, method: :delete, class: "nav-link active" %>
     </li>
-    <li class="nav-item">
-      <%= link_to 'My Posts', user_posts_url(current_user), class: "nav-link active" %>
-    </li>
+    <% if current_user %>
+      <li class="nav-item">
+        <%= link_to 'My Posts', user_posts_url(current_user), class: "nav-link active" %>
+      </li>
+    <% end %>
   </ul>
 </div>
