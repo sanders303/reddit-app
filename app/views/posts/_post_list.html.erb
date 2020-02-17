@@ -1,27 +1,59 @@
-<%= tag.div id: 'post-list', data: { url: url} do %>
-  <div class="row" v-for="post in posts">
+<%= tag.div id: 'post-list',
+  data: {
+    url: url,
+    user_id: (current_user.id rescue nil)
+  } do %>
+  <div class="row" v-for="(post, index) in posts">
     <div class="col">
       <div class="card">
         <div class="m-3">
-          <h5 class="card-title">
-            {{ post.title }}
-          </h5>
-          <p class="card-text">
-            {{ post.content }}
-          </p>
-          <div class="row">
-            <div class="col-3">
-
-            </div>
-            <div class="col-9">
-              <div class="text-right">
-                <ul class="list-inline">
-                  <li class="list-inline-item">c/{{ post.category }}</li>
-                  <li class="list-inline-item">Posted by u/{{ post.email }}</li>
-                </ul>
-
+          <div v-if="post.current_user" >
+            <div class="card-title">
+              <input class="form-control mb-2" type="text" v-model="post.title">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">c/</div>
+                </div>
+                <input class="form-control" type="text" v-model="post.category">
               </div>
 
+            </div>
+            <p class="card-text">
+              <textarea name="name" rows="4" cols="100" v-model="post.content"></textarea>
+            </p>
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <button
+                  type="button"
+                  v-on:click="updatePost(index)"
+                >
+                  Save Post
+                </button>
+              </li>
+              <li class="list-inline-item"></li>
+            </ul>
+          </div>
+          <div v-else>
+            <h5 class="card-title">
+              {{ post.title }}
+            </h5>
+            <p class="card-text">
+              {{ post.content }}
+            </p>
+            <div class="row">
+              <div class="col-3">
+
+              </div>
+              <div class="col-9">
+                <div class="text-right">
+                  <ul class="list-inline">
+                    <li class="list-inline-item">c/{{ post.category }}</li>
+                    <li class="list-inline-item">Posted by u/{{ post.email }}</li>
+                  </ul>
+
+                </div>
+
+              </div>
             </div>
           </div>
         </div>

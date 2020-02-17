@@ -2,10 +2,11 @@ module Users
   class PostsController < ApplicationController
     before_action :set_post, only: [:show, :edit, :update, :destroy]
     before_action :authenticate_user!
+    before_action :verify_user, only: [:update, :destroy, :edit]
     # GET /posts
     # GET /posts.json
     def index
-      @posts = current_user.posts
+      # @posts = current_user.posts
     end
 
     # GET /posts/1
@@ -66,6 +67,12 @@ module Users
       # Use callbacks to share common setup or constraints between actions.
       def set_post
         @post = Post.find(params[:id])
+      end
+
+      def verify_user
+        if params[:user_id].to_i != current_user.id
+          redirect_to root_url
+        end
       end
 
       # Only allow a list of trusted parameters through.

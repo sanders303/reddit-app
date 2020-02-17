@@ -55,6 +55,7 @@
 import TurbolinksAdapter from 'vue-turbolinks'
 import Vue from 'vue/dist/vue.esm'
 import App from '../app.vue'
+import Rails from 'rails-ujs';
 
 Vue.use(TurbolinksAdapter)
 
@@ -76,6 +77,32 @@ document.addEventListener('turbolinks:load', () => {
             console.log(text);
             this.posts = JSON.parse(text);
           })
+      },
+      methods: {
+        updatePost(index) {
+          console.log(this.posts[index].content)
+          const data = {
+            post: {
+              user_id: this.posts[index].user_id,
+              content: this.posts[index].content,
+              title: this.posts[index].title,
+              category: this.posts[index].category,
+            }
+          };
+          const url = `users/${this.posts[index].user_id}/posts/${this.posts[index].id}`;
+          fetch(url, {
+            method: 'PATCH',
+            body: JSON.stringify(data),
+            headers: {
+              'content-type': 'application/json',
+              'X-CSRF-Token': Rails.csrfToken(),
+            },
+            credentials: 'same-origin',
+          })
+            .then((response) => {
+              console.log(response)
+            });
+        }
       }
     })
   }

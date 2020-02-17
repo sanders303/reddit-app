@@ -2,30 +2,7 @@
 
 <h1>Posts</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>User</th>
-      <th>Category</th>
-      <th>Content</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @posts.each do |post| %>
-      <tr>
-        <td><%= post.title %></td>
-        <td><%= post.user_id %></td>
-        <td><%= post.category %></td>
-        <td><%= post.content %></td>
-        <td><%= link_to 'Edit', edit_user_post_path(current_user, post) %></td>
-        <td><%= link_to 'Destroy', user_post_path(current_user, post), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render partial: 'posts/post_list', locals: {url: posts_url(user_id: current_user.id)} %>
 
 <br>
 
