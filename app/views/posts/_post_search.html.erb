@@ -1,0 +1,19 @@
+<ul class="list-inlinde">
+  <li class="list-inline-item">
+    <label>Category</label>
+    <input class="form-control" type="text" v-model="category">
+  </li>
+  <li class="list-inline-item">
+    <label>Title</label>
+    <input class="form-control" type="text" v-model="title">
+  </li>
+  <li class="list-inline-item">
+    <button
+      type="button"
+      class="btn btn-primary"
+      v-on:click="search"
+    >
+      Search
+    </button>
+  </li>
+</ul>

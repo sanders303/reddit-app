@@ -66,7 +66,9 @@ document.addEventListener('turbolinks:load', () => {
       el: postListElement,
       data: () => {
         return {
-          posts: []
+          posts: [],
+          category: '',
+          title: '',
         }
       },
       mounted() {
@@ -135,6 +137,14 @@ document.addEventListener('turbolinks:load', () => {
                 }
               });
             });
+        },
+        search() {
+          fetch(`${postListElement.dataset.url}?category=${this.category}&title=${this.title}`)
+            .then(response => response.text())
+            .then((text) => {
+              console.log(text);
+              this.posts = JSON.parse(text);
+            })
         }
       }
     })

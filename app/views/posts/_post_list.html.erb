@@ -3,6 +3,7 @@
     url: url,
     user_id: (current_user.id rescue nil)
   } do %>
+  <%= render partial: 'posts/post_search' %>
   <div class="row" v-for="(post, index) in posts">
     <div class="col">
       <div class="card">
