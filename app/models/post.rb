@@ -1,5 +1,6 @@
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :votes
 
   def self.define_filters(search)
     return if search.nil?

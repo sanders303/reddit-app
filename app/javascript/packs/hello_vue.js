@@ -61,7 +61,6 @@ Vue.use(TurbolinksAdapter)
 
 document.addEventListener('turbolinks:load', () => {
   const postListElement = document.getElementById('post-list');
-  console.log(postListElement)
   if (postListElement !== null) {
     const postList = new Vue({
       el: postListElement,
@@ -101,6 +100,40 @@ document.addEventListener('turbolinks:load', () => {
           })
             .then((response) => {
               console.log(response)
+            });
+        },
+        vote(index, vote) {
+          const data = {
+            vote_type: vote,
+          };
+          const url = `posts/${this.posts[index].id}/vote`;
+          fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+              'content-type': 'application/json',
+              'X-CSRF-Token': Rails.csrfToken(),
+            },
+            credentials: 'same-origin',
+          })
+            .then((response) => {
+              response.json().then((json) => {
+                if (json.new) {
+                  if (vote === 0) {
+                    this.posts[index].upvotes += 1
+                  } else {
+                    this.posts[index].downvotes += 1
+                  }
+                } else if (json.change) {
+                  if (vote === 0) {
+                    this.posts[index].upvotes += 1
+                    this.posts[index].downvotes -= 1
+                  } else {
+                    this.posts[index].downvotes += 1
+                    this.posts[index].upvotes -= 1
+                  }
+                }
+              });
             });
         }
       }

@@ -42,7 +42,26 @@
             </p>
             <div class="row">
               <div class="col-3">
-
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    {{ post.upvotes }}
+                    <button
+                      type="button"
+                      v-on:click="vote(index, 0)"
+                    >
+                      Upvote
+                    </button>
+                  </li>
+                  <li class="list-inline-item">
+                    {{ post.downvotes }}
+                    <button
+                      type="button"
+                      v-on:click="vote(index, 1)"
+                    >
+                      Downvote
+                    </button>
+                  </li>
+                </ul>
               </div>
               <div class="col-9">
                 <div class="text-right">
