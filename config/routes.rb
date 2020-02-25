@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       post 'vote'
     end
   end
+  resources :comments
   resources :users do
     resources :posts, module: :users
   end
