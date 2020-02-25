@@ -75,13 +75,11 @@ document.addEventListener('turbolinks:load', () => {
         fetch(postListElement.dataset.url)
           .then(response => response.text())
           .then((text) => {
-            console.log(text);
             this.posts = JSON.parse(text);
           })
       },
       methods: {
         updatePost(index) {
-          console.log(this.posts[index].content)
           const data = {
             post: {
               user_id: this.posts[index].user_id,
@@ -120,23 +118,26 @@ document.addEventListener('turbolinks:load', () => {
           })
             .then((response) => {
               response.json().then((json) => {
-                if (json.new) {
-                  if (vote === 0) {
-                    this.posts[index].upvotes += 1
-                  } else {
-                    this.posts[index].downvotes += 1
-                  }
-                } else if (json.change) {
-                  if (vote === 0) {
-                    this.posts[index].upvotes += 1
-                    this.posts[index].downvotes -= 1
-                  } else {
-                    this.posts[index].downvotes += 1
-                    this.posts[index].upvotes -= 1
-                  }
-                }
+                this.handleVote(json.new, json.change, this.posts[index], vote)
               });
             });
+        },
+        handleVote(newVote, changedVote, obj, vote) {
+          if (newVote) {
+            if (vote === 0) {
+              obj.upvotes += 1
+            } else {
+              obj.downvotes += 1
+            }
+          } else if (changedVote) {
+            if (vote === 0) {
+              obj.upvotes += 1
+              obj.downvotes -= 1
+            } else {
+              obj.downvotes += 1
+              obj.upvotes -= 1
+            }
+          }
         },
         search() {
           fetch(`${postListElement.dataset.url}?category=${this.category}&title=${this.title}`)
