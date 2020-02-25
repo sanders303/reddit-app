@@ -80,47 +80,30 @@ document.addEventListener('turbolinks:load', () => {
       },
       methods: {
         updatePost(index) {
+          const post = this.posts[index];
           const data = {
             post: {
-              user_id: this.posts[index].user_id,
-              content: this.posts[index].content,
-              title: this.posts[index].title,
-              category: this.posts[index].category,
+              user_id: post.user_id,
+              content: post.content,
+              title: post.title,
+              category: post.category,
             }
           };
-          const url = `users/${this.posts[index].user_id}/posts/${this.posts[index].id}`;
-          fetch(url, {
-            method: 'PATCH',
-            body: JSON.stringify(data),
-            headers: {
-              'content-type': 'application/json',
-              'X-CSRF-Token': Rails.csrfToken(),
-            },
-            credentials: 'same-origin',
-          })
-            .then((response) => {
-              console.log(response)
-            });
+          const url = `/users/${post.user_id}/posts/${post.id}`;
+          this.writeToApi(url, 'PATCH', data, (response) => {
+            console.log(response);
+          });
         },
         vote(index, vote) {
           const data = {
             vote_type: vote,
           };
-          const url = `posts/${this.posts[index].id}/vote`;
-          fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-              'content-type': 'application/json',
-              'X-CSRF-Token': Rails.csrfToken(),
-            },
-            credentials: 'same-origin',
-          })
-            .then((response) => {
-              response.json().then((json) => {
-                this.handleVote(json.new, json.change, this.posts[index], vote)
-              });
+          const url = `/posts/${this.posts[index].id}/vote`;
+          this.writeToApi(url, 'POST', data, (response) => {
+            response.json().then((json) => {
+              this.handleVote(json.new, json.change, this.posts[index], vote)
             });
+          });
         },
         handleVote(newVote, changedVote, obj, vote) {
           if (newVote) {
@@ -148,25 +131,19 @@ document.addEventListener('turbolinks:load', () => {
             })
         },
         commentOnPost(index) {
+          const post = this.posts[index];
           const data = {
-            comment: this.posts[index].comment,
-            post_id: this.posts[index].id
+            comment: post.comment,
+            post_id: post.id
           };
-          fetch('comments', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-              'content-type': 'application/json',
-              'X-CSRF-Token': Rails.csrfToken(),
-            },
-            credentials: 'same-origin',
-          })
-            .then((response) => {
-              response.json().then((json) => {
-                this.posts[index].comments = json
-                this.posts[index].show_comments = true
-              });
+          this.writeToApi('comments', 'POST', data, (response) => {
+            response.json().then((json) => {
+              post.comments = json;
+              post.show_comments = true;
+              post.comment = '';
             });
+          });
+
         },
         viewComments(index) {
           const showing = this.posts[index].show_comments;
@@ -187,6 +164,18 @@ document.addEventListener('turbolinks:load', () => {
                 });
               });
           }
+        },
+        writeToApi(url, method, data, successFunction) {
+          fetch(url, {
+            method,
+            body: JSON.stringify(data),
+            headers: {
+              'content-type': 'application/json',
+              'X-CSRF-Token': Rails.csrfToken(),
+            },
+            credentials: 'same-origin',
+          })
+            .then(successFunction);
         }
       }
     })
