@@ -145,6 +145,47 @@ document.addEventListener('turbolinks:load', () => {
               console.log(text);
               this.posts = JSON.parse(text);
             })
+        },
+        commentOnPost(index) {
+          const data = {
+            comment: this.posts[index].comment,
+            post_id: this.posts[index].id
+          };
+          fetch('comments', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+              'content-type': 'application/json',
+              'X-CSRF-Token': Rails.csrfToken(),
+            },
+            credentials: 'same-origin',
+          })
+            .then((response) => {
+              response.json().then((json) => {
+                this.posts[index].comments = json
+                this.posts[index].show_comments = true
+              });
+            });
+        },
+        viewComments(index) {
+          const showing = this.posts[index].show_comments;
+          if (showing) {
+            this.posts[index].show_comments = false
+          } else {
+            fetch(`comments?post_id=${this.posts[index].id}`, {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                'X-CSRF-Token': Rails.csrfToken(),
+              },
+            })
+              .then((response) => {
+                response.json().then((json) => {
+                  this.posts[index].comments = json
+                  this.posts[index].show_comments = true
+                });
+              });
+          }
         }
       }
     })

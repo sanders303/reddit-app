@@ -11,7 +11,9 @@ class PostsController < ApplicationController
         category: post.category, user_id: post.user_id,
         current_user: user_id == post.user_id,
         upvotes: Vote.where(post_id: post.id, vote_type: 0).count,
-        downvotes: Vote.where(post_id: post.id, vote_type: 1).count
+        downvotes: Vote.where(post_id: post.id, vote_type: 1).count,
+        comments: [],
+        show_comments: false,
       }}
   end
 

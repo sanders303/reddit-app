@@ -42,7 +42,7 @@
               {{ post.content }}
             </p>
             <div class="row">
-              <div class="col-3">
+              <div class="col-6">
                 <ul class="list-inline">
                   <li class="list-inline-item">
                     {{ post.upvotes }}
@@ -62,9 +62,22 @@
                       Downvote
                     </button>
                   </li>
+                  <li class="list-inline-item">
+                    <button
+                      type="button"
+                      v-on:click="viewComments(index)"
+                    >
+                      <div v-if="post.show_comments" >
+                        Hide comments
+                      </div>
+                      <div v-else>
+                        View Comments
+                      </div>
+                    </button>
+                  </li>
                 </ul>
               </div>
-              <div class="col-9">
+              <div class="col-6">
                 <div class="text-right">
                   <ul class="list-inline">
                     <li class="list-inline-item">c/{{ post.category }}</li>
@@ -72,7 +85,30 @@
                   </ul>
 
                 </div>
-
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div v-if="post.show_comments" >
+                  <div class="row" v-for="(comment, index) in post.comments">
+                    <div class="col-12">
+                      <div class="card">
+                        <p class="card-text m-2">
+                          {{ comment.content }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <textarea name="name" rows="4" cols="100" v-model="post.comment"></textarea>
+                <br>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  v-on:click="commentOnPost(index)"
+                >
+                  Post Comment
+                </button>
               </div>
             </div>
           </div>
